@@ -11,16 +11,18 @@
             </div>
         @endif
         <div class="mt-3">
-            <a href="{{ route('users.export') }}" class="btn btn-success">Export to Excel</a>
-        </div>
-        <div class="table-responsive">
+            <a href="{{ route('users.export') }}" class="btn btn-success">Export to Excel</a><br>
+        </div><br>
+        <div class="table-responsive mt-1">
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Action</th>
+                        <th>Delete</th>
+                        <th>Edit</th>
+                        <th>Report</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +37,13 @@
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
                                 </form>
+                            </td>
+                            <td>
                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal{{ $user->id }}">Edit</a>
+                            </td>
+                            <td>
+                                <a href="{{ route('user.pdf', $user->id) }}" class="btn btn-primary" target="_blank">Generate PDF</a>
+                                <!-- Other actions... -->
                             </td>
                         </tr>
 

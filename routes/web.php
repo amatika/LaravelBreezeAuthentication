@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,10 +22,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/users', [UserController::class, 'show_users']);
+Route::get('/users', [UserController::class, 'show_users'])->name('myusers');
+Route::get('/users/export', [UserController::class, 'exportToExcel'])->name('users.export');
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+//Route::get('/users/{id}/pdf', [UserController::class, 'showPDF'])->name('user.pdf');
+Route::get('/pdf/generate/{id}', [PDFController::class, 'generatePDF'])->name('user.pdf');;
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

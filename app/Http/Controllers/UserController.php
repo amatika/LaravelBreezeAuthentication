@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UsersExport;
 class UserController extends Controller
 {
     public function show_users()
@@ -36,4 +38,17 @@ class UserController extends Controller
 
         return redirect('/users')->with('success', 'User updated successfully');
     }
+    
+    //function for exporting user data to excel
+    public function exportToExcel()
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
+    }
+
+    //function for creating report from user data
+    public function showPDF($id)
+    {
+        return view('pdf.user_report', compact('id'));
+    }
+
 }
