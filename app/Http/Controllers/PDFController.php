@@ -14,6 +14,7 @@ class PDFController extends Controller
 
         $pdf = PDF::loadView('pdf.user_report', compact('user'));
 
-        return $pdf->download('user_report.pdf');
+       // return $pdf->download('user_report.pdf');
+       return $pdf->stream('user_report.pdf');//allows one to preview the report
     }
 }

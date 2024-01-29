@@ -4,7 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use App\Mail\UserReportEmail;
+use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,7 +30,16 @@ Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edi
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 //Route::get('/users/{id}/pdf', [UserController::class, 'showPDF'])->name('user.pdf');
 Route::get('/pdf/generate/{id}', [PDFController::class, 'generatePDF'])->name('user.pdf');;
+Route::post('/users/generate-multiple-pdf', [UserController::class, 'generateMultiplePDF'])->name('user.generateMultiplePDF');
+Route::get('/users/download-zip', [UserController::class, 'downloadZip'])->name('user.downloadZip');
 
+
+//sending user mails
+Route::get('/sendmail', function () {
+      // Send email with the PDF attached
+      Mail::to("tgrkelvins@gmail.com")
+      ->send(new UserReportEmail());
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
