@@ -16,11 +16,14 @@
             </div>-->
         @endif
 
-        <form action="{{ route('user.generateMultiplePDF') }}" method="post">
+        <form action="{{ route('user.sendEmails') }}" method="post">
             @csrf
             <div class="mt-3 mb-2">
                 <button type="submit" class="btn btn-success">Generate PDF for Selected Rows</button>
+                <button type="submit" class="btn btn-primary">Send Emails</button>
             </div>
+          
+
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <!-- Table headers... -->
@@ -59,4 +62,21 @@
             {{ $users->links() }}
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function sendEmails() {
+            if (confirm('Are you sure you want to send emails?')) {
+                // Assuming you have jQuery available
+                $.post("{{ route('user.sendEmails') }}", {_token: "{{ csrf_token() }}"})
+                    .done(function (response) {
+                        //alert(response.message);
+                        alert("test failed");
+                    })
+                    .fail(function (error) {
+                        console.error(error);
+                        alert('Failed to send emails.');
+                    });
+            }
+        }
+    </script>
 @endsection

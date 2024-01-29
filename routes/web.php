@@ -41,6 +41,10 @@ Route::get('/sendmail', function () {
       ->send(new UserReportEmail());
 });
 
+Route::post('/users/send-emails', [UserController::class, 'generateMultiplePDF_and_mail'])->name('user.sendEmails');
+
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

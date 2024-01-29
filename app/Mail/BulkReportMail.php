@@ -9,8 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
-use Illuminate\Mail\Attachment;
-class UserReportEmail extends Mailable
+class BulkReportMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -27,7 +26,7 @@ class UserReportEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'User Report Email',
+            subject: 'Bulk Report Mail',
         );
     }
 
@@ -37,8 +36,13 @@ class UserReportEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.hello',         
+            view: 'mail.hello',
         );
+        //return $this->view('mail.hello');
+                   /* ->attachData($this->userReportPDF(), 'user_report.pdf', [
+                        'mime' => 'application/pdf',
+                    ])
+                    ->subject('User Report');*/
     }
 
     /**
@@ -48,11 +52,15 @@ class UserReportEmail extends Mailable
      */
     public function attachments(): array
     {
-        //$pdf = \PDF::loadView('pdf.user_report', ['user' => $this->user]);
-        return [
-            Attachment::fromPath(storage_path("user_reports/user_{$this->user->id}_report.pdf"))
-                    ->as('name.pdf')
-                    ->withMime('application/pdf'),
-        ];
+        return [];
+    }
+
+    protected function userReportPDF()
+    {
+        // Generate PDF for the user
+        $pdf = \PDF::loadView('pdf.user_report', ['user' => $this->user]);
+        
+        // Return the raw PDF content
+        return $pdf->output();
     }
 }

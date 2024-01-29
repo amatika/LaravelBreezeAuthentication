@@ -7,6 +7,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UsersExport;
 use PDF;
+use App\Mail\UserReportEmail;
+use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
     public function show_users()
@@ -124,6 +126,28 @@ class UserController extends Controller
         return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
     }
 
-   
+   //function that mails a report to each user    
+    public function generateMultiplePDF_and_mail(Request $request)
+    {
+        $selectedUserIds = $request->input('selected_users', []);
+        $selectedUsers = User::whereIn('id', $selectedUserIds)->get();
+    
+        foreach ($selectedUsers as $user) {
+            $pdf = \PDF::loadView('pdf.user_report', compact('user'));
+    
+            // Save the PDF to the storage directory
+            $pdfPath = storage_path("user_reports/user_{$user->id}_report.pdf");
+            $pdf->save($pdfPath);
+    
+            // Send email with the PDF attached
+            Mail::to($user->email)
+                ->send(new UserReportEmail($user));
+    
+            // Delete the saved PDF file after sending the email
+            //unlink($pdfPath);
+        }
+    
+        return redirect()->back()->with('success', 'PDFs and emails sent successfully.');
+    }
 
 }
